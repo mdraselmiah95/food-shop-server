@@ -69,6 +69,21 @@ client.connect((err) => {
       });
   });
 
+  //add order products
+  app.post("/addOrder", (req, res) => {
+    console.log(req.body);
+    ordersCollection.insertOne(req.body).then((result) => {
+      res.send(result);
+    });
+  });
+  //get my order
+
+  app.get("/myOrders/:email", async (req, res) => {
+    const result = await ordersCollection
+      .find({ email: req.params.email })
+      .toArray();
+    res.send(result);
+  });
   //end
 });
 
