@@ -1,6 +1,6 @@
 const express = require("express");
 const { MongoClient } = require("mongodb");
-// const ObjectId = require("mongodb").ObjectId;
+const ObjectId = require("mongodb").ObjectId;
 require("dotenv").config();
 const cors = require("cors");
 const app = express();
@@ -26,10 +26,50 @@ client.connect((err) => {
     });
   });
 
+  //get all products
   app.get("/products", async (req, res) => {
     const result = await productsCollection.find({}).toArray();
     res.send(result);
   });
+
+  //delete  product
+
+  app.delete("/deleteProduct/:id", async (req, res) => {
+    const result = await productsCollection.deleteOne({
+      _id: ObjectId(req.params.id),
+    });
+    res.send(result);
+  });
+
+  //get single product
+  app.get("/singleProduct/:id", (req, res) => {
+    console.log(req.params.id);
+    productsCollection
+      .find({ _id: ObjectId(req.params.id) })
+      .toArray((err, results) => {
+        console.log(results);
+        res.send(results[0]);
+      });
+  });
+
+  //update product
+  app.put("/update/:id", async (req, res) => {
+    const id = req.params.id;
+    const updatedName = req.body;
+    const filter = { _id: ObjectId(id) };
+
+    productsCollection
+      .updateOne(filter, {
+        $set: {
+          name: updatedName.name,
+        },
+      })
+      .then((result) => {
+        res.send(result);
+      });
+  });
+
+  //end
 });
 
 app.get("/", (req, res) => {
