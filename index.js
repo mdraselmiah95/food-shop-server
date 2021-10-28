@@ -21,7 +21,14 @@ client.connect((err) => {
   const ordersCollection = client.db("foodShop").collection("orders");
 
   app.post("/addProduct", (req, res) => {
-    console.log(req.body);
+    productsCollection.insertOne(req.body).then((result) => {
+      res.send(result.insertedId);
+    });
+  });
+
+  app.get("/products", async (req, res) => {
+    const result = await productsCollection.find({}).toArray();
+    res.send(result);
   });
 });
 
