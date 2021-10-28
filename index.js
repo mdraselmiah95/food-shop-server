@@ -19,7 +19,10 @@ const client = new MongoClient(uri, {
 client.connect((err) => {
   const productsCollection = client.db("foodShop").collection("products");
   const ordersCollection = client.db("foodShop").collection("orders");
-  console.log("server is running");
+
+  app.post("/addProduct", (req, res) => {
+    console.log(req.body);
+  });
 });
 
 app.get("/", (req, res) => {
