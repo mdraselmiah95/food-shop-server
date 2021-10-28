@@ -16,7 +16,11 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
 });
 
-// run().catch(console.dir);
+client.connect((err) => {
+  const productsCollection = client.db("foodShop").collection("products");
+  const ordersCollection = client.db("foodShop").collection("orders");
+  console.log("server is running");
+});
 
 app.get("/", (req, res) => {
   res.send("Running Food server");
